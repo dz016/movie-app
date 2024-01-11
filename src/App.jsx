@@ -1,7 +1,7 @@
 // Import necessary dependencies
 import React, { useState } from "react";
-import Navbar from "./Navbar.jsx"; // Make sure to replace './Navbar' with the actual path to your Navbar component
-import MovieGrid from "./MovieGrid"; // Replace './MovieGrid' with the actual path to your MovieGrid component
+import Navbar from "./Navbar.jsx";
+import MovieGrid from "./MovieGrid";
 import { Container, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect } from "react";
@@ -9,6 +9,7 @@ import { useEffect } from "react";
 // Functional component for App
 const App = () => {
   const [filterMovies, setFiltered] = useState([]);
+  const [allMovies, setAll] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const url =
@@ -21,6 +22,7 @@ const App = () => {
 
       try {
         const response = await axios.get(url, { headers });
+        setAll(response.data.results);
         setFiltered(response.data.results);
       } catch (error) {
         console.error("Error:", error.message);
@@ -29,10 +31,15 @@ const App = () => {
 
     fetchData();
   }, []);
+  console.log(allMovies);
 
   return (
     <div>
-      <Navbar setFiltered={setFiltered} filterMovies={filterMovies} />
+      <Navbar
+        setFiltered={setFiltered}
+        filterMovies={filterMovies}
+        allMovies={allMovies}
+      />
       <div
         style={{ backgroundColor: "#bad6f2", height: "100vh", padding: "1rem" }}
       >
@@ -47,7 +54,6 @@ const App = () => {
           <MovieGrid filterMovies={filterMovies} />
         </Container>
       </div>
-      <div style={{ height: "65rem" }}></div>
     </div>
   );
 };
